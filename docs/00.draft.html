@@ -1,0 +1,537 @@
+<!-- 
+PLAN NARRATIVE & STRUCTURE:
+1. Introduction: Hook the user with the "Food Structure" mission - decoding food labels into health impacts.
+2. The Problem: Visualize the "Information Asymmetry" and "Global Standard Differences" using a comparison chart.
+3. Target Audience: Breakdown of who needs this service (Core, Active, Mass) using a composition chart.
+4. The Solution (Algorithm): Visualize the "Impact Ranking" weighting (Frequency vs Accumulation vs Toxicity) using a donut chart.
+5. Risk Analysis: A mock visualization of a "Product Risk Profile" (e.g., Radar chart) to show how the app analyzes a specific food item.
+6. Roadmap: A vertical timeline (HTML/CSS only) showing the project phases.
+7. Business Model: Card-based layout explaining revenue streams.
+
+CHART SELECTION & JUSTIFICATION (NO SVG):
+1. Global Standards Comparison -> Bar Chart (Chart.js): Best for comparing categorical data (USA vs EU vs KR) across a metric (Allowed Limits).
+2. Target Audience -> Pie Chart (Chart.js): Shows the composition of the user base effectively.
+3. Algorithm Weights -> Doughnut Chart (Chart.js): Perfect for showing parts of a whole (the scoring logic).
+4. Product Risk Profile -> Radar Chart (Chart.js): Excellent for multivariate data comparison (Insulin, Liver, Gut health impacts).
+5. Roadmap -> Styled HTML/CSS: Since SVGs are banned, a CSS-border based timeline is the best "Organize" visualization.
+-->
+
+<!-- 
+PALETTE: Brilliant Blues & Energetic Accents
+Primary: #0284c7 (Sky Blue)
+Secondary: #4f46e5 (Indigo)
+Accent: #f97316 (Orange/Warning)
+Background: #f1f5f9 (Slate 100)
+Text: #334155 (Slate 700)
+-->
+
+<!-- CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in the output. All icons are Unicode or CSS shapes. -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Structure: Decoding What You Eat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f1f5f9; color: #334155; }
+        .gradient-header { background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%); }
+        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        /* Chart Container Specifics */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px; /* Default mobile height */
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px; /* Tablet/Desktop height */
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="gradient-header text-white pt-16 pb-24 px-4 shadow-xl">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">FOOD STRUCTURE</h1>
+            <p class="text-xl md:text-2xl font-light opacity-90 max-w-3xl mx-auto">
+                첨가물의 이름이 아니라, 당신의 몸에서 일어나는 <span class="font-bold border-b-2 border-orange-400">반응</span>을 읽습니다.
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">🧪 성분 분석</span>
+                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">🌍 글로벌 기준</span>
+                <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">🛡️ 대안 제시</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 -mt-16 pb-20 relative z-10 space-y-12">
+
+        <!-- Intro Cards (Mission & Vision) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl shadow-lg p-8 card-hover border-t-4 border-sky-500">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-2">🎯</span> Mission
+                </h2>
+                <p class="text-lg leading-relaxed text-slate-600">
+                    가공식품의 화학 성분을 해체하여 인체 영향도를 <strong>객관적 지표</strong>로 환산합니다. 막연한 공포가 아닌, 과학적 구조 이해를 돕습니다.
+                </p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-lg p-8 card-hover border-t-4 border-indigo-500">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-2">🔭</span> Vision
+                </h2>
+                <p class="text-lg leading-relaxed text-slate-600">
+                    대한민국에서 가장 신뢰받는 <strong>식품 화학 데이터 솔루션</strong>이 되어, 소비자가 스스로 건강한 대안을 선택하도록 돕습니다.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 1: Target Audience (Pie Chart) -->
+        <section class="bg-white rounded-2xl shadow-lg p-8">
+            <div class="md:flex md:gap-12 items-center">
+                <div class="md:w-1/3 mb-8 md:mb-0">
+                    <h3 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-orange-500 pl-4">핵심 타겟 분석</h3>
+                    <p class="text-slate-600 mb-4">
+                        푸드 스트럭처는 성분 정보가 생존과 직결된 고관여층부터, 효율적인 관리를 원하는 대중까지 폭넓은 니즈를 충족합니다.
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-indigo-500 font-bold mr-2">Core:</span>
+                            <span class="text-sm">자가면역질환, 알레르기 등 생존형 관리자</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-sky-500 font-bold mr-2">Active:</span>
+                            <span class="text-sm">자녀의 먹거리를 깐깐하게 고르는 부모</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-slate-400 font-bold mr-2">Mass:</span>
+                            <span class="text-sm">다이어트 및 헬스 케어 유저</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="md:w-2/3">
+                    <div class="chart-container">
+                        <canvas id="targetChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-slate-400 mt-2">사용자 층 구성 비율 (예상)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Algorithm (Doughnut Chart) -->
+        <section class="bg-white rounded-2xl shadow-lg p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <div class="chart-container">
+                        <canvas id="algorithmChart"></canvas>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <h3 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-indigo-500 pl-4">실질적 위험도 산출 로직</h3>
+                    <p class="text-slate-600 mb-6">
+                        단순히 "독성이 있다"는 정보는 부족합니다. 우리는 <strong>현대인의 섭취 패턴</strong>을 반영하여 가중치를 적용한 '실질적 위험도(Practical Risk)'를 계산합니다.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <strong class="block text-blue-700">1. 현대인 섭취 빈도 (40%)</strong>
+                            <span class="text-sm text-slate-500">소스, 빵, 음료 등 일상 식품에 얼마나 광범위하게 포함되어 있는가?</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg border-l-4 border-purple-500">
+                            <strong class="block text-purple-700">2. 체내 축적 및 지속성 (30%)</strong>
+                            <span class="text-sm text-slate-500">배출되지 않고 몸에 쌓여 장기적인 염증이나 대사 문제를 일으키는가?</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg border-l-4 border-pink-500">
+                            <strong class="block text-pink-700">3. 생리학적 독성 수준 (30%)</strong>
+                            <span class="text-sm text-slate-500">장내 미생물 파괴, 호르몬 교란 등 학술적으로 검증된 독성 강도.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Global Standards (Bar Chart) -->
+        <section class="bg-white rounded-2xl shadow-lg p-8 overflow-hidden">
+            <div class="mb-8">
+                <h3 class="text-3xl font-bold text-slate-800 mb-4 border-l-4 border-sky-500 pl-4">국가별 허용 기준 비교</h3>
+                <p class="text-slate-600">
+                    "미국에선 안전하지만, 유럽에선 경고 대상?"<br>
+                    국가별로 상이한 안전 기준을 투명하게 비교하여, 사용자가 보수적인 판단을 내릴 수 있도록 돕습니다. 아래는 가상의 예시 데이터입니다.
+                </p>
+            </div>
+            <div class="w-full">
+                <div class="chart-container">
+                    <canvas id="standardsChart"></canvas>
+                </div>
+                <p class="text-center text-sm text-slate-500 mt-4">
+                    <span class="inline-block w-3 h-3 bg-red-400 rounded-full mr-1"></span>한국(KR)
+                    <span class="inline-block w-3 h-3 bg-blue-400 rounded-full mx-1"></span>미국(USA)
+                    <span class="inline-block w-3 h-3 bg-green-400 rounded-full mx-1"></span>유럽(EU - 가장 엄격)
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Sample Analysis (Radar Chart) -->
+        <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-lg p-8 text-white">
+            <div class="md:flex md:gap-12 items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h3 class="text-3xl font-bold text-white mb-2">분석 예시: 00 소스</h3>
+                    <p class="text-slate-300 mb-6 text-sm">
+                        특정 가공식품 스캔 시 제공되는 <strong>신체 영향 프로파일</strong>입니다.
+                    </p>
+                    <div class="bg-white/10 rounded-xl p-6 backdrop-blur-md">
+                        <div class="flex justify-between items-center mb-4 border-b border-white/20 pb-2">
+                            <span class="font-bold text-orange-400 text-xl">⚠️ 경고 등급</span>
+                            <span class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">주의 필요</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-200">
+                            <li>🦠 <strong>장내 미생물:</strong> 유화제로 인한 점막 손상 우려</li>
+                            <li>🩸 <strong>혈당 반응:</strong> 액상과당 포함, 급격한 스파이크</li>
+                            <li>🍬 <strong>대사 부담:</strong> 간 대사 필요 성분 다수</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="chart-container bg-white/5 rounded-xl p-4">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Roadmap (HTML Timeline) -->
+        <section class="bg-white rounded-2xl shadow-lg p-8">
+            <h3 class="text-3xl font-bold text-slate-800 mb-8 text-center">프로젝트 로드맵</h3>
+            <div class="relative max-w-3xl mx-auto">
+                <!-- Vertical Line -->
+                <div class="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 transform md:-translate-x-1/2"></div>
+
+                <!-- Phase 1 -->
+                <div class="relative mb-12 md:flex md:justify-between items-center group">
+                    <div class="md:w-5/12 mb-4 md:mb-0 md:text-right pr-8">
+                        <h4 class="text-xl font-bold text-indigo-600">Phase 1: 도입기</h4>
+                        <p class="text-sm text-slate-500">MVP 개발 및 데이터 구축</p>
+                    </div>
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-indigo-500 rounded-full border-4 border-white shadow transform -translate-x-1/2"></div>
+                    <div class="md:w-5/12 pl-12 md:pl-8">
+                        <div class="bg-indigo-50 p-4 rounded-lg shadow-sm border-l-4 border-indigo-500">
+                            <ul class="text-sm text-slate-700 list-disc list-inside">
+                                <li>가공식품 5,000종 DB 구축</li>
+                                <li>바코드 스캔/검색 기능</li>
+                                <li>글로벌 기준 비교 로직 구현</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="relative mb-12 md:flex md:justify-between items-center group flex-row-reverse">
+                    <div class="md:w-5/12 mb-4 md:mb-0 pl-8 text-left">
+                        <h4 class="text-xl font-bold text-sky-600">Phase 2: 확장기</h4>
+                        <p class="text-sm text-slate-500">개인화 및 분석 고도화</p>
+                    </div>
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-sky-500 rounded-full border-4 border-white shadow transform -translate-x-1/2"></div>
+                    <div class="md:w-5/12 pl-12 md:pl-0 md:pr-8 md:text-right">
+                        <div class="bg-sky-50 p-4 rounded-lg shadow-sm border-r-4 border-sky-500">
+                            <ul class="text-sm text-slate-700 list-none">
+                                <li>이미지 인식(OCR) 기능 고도화</li>
+                                <li>사용자별 체중 기반 위험도 알림</li>
+                                <li>커뮤니티/기록 기능 오픈</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="relative md:flex md:justify-between items-center group">
+                    <div class="md:w-5/12 mb-4 md:mb-0 md:text-right pr-8">
+                        <h4 class="text-xl font-bold text-orange-500">Phase 3: 안정기</h4>
+                        <p class="text-sm text-slate-500">생태계 확장</p>
+                    </div>
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 bg-orange-500 rounded-full border-4 border-white shadow transform -translate-x-1/2"></div>
+                    <div class="md:w-5/12 pl-12 md:pl-8">
+                        <div class="bg-orange-50 p-4 rounded-lg shadow-sm border-l-4 border-orange-500">
+                            <ul class="text-sm text-slate-700 list-disc list-inside">
+                                <li>반려동물 사료/간식 영역 확장</li>
+                                <li>클린 라벨 커머스 연계 강화</li>
+                                <li>프리미엄 구독 리포트 활성화</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Business Model (Cards) -->
+        <section>
+            <h3 class="text-3xl font-bold text-slate-800 mb-8 text-center">비즈니스 모델 (BM)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-teal-500 card-hover">
+                    <div class="text-4xl mb-4">🔗</div>
+                    <h4 class="text-xl font-bold mb-2">Affiliate</h4>
+                    <p class="text-sm text-slate-600 mb-4">클린 라벨 제품 큐레이션 및 추천</p>
+                    <ul class="text-xs text-slate-500 space-y-2">
+                        <li>• 대체 제품 구매 링크 연동</li>
+                        <li>• 카테고리별 추천 수수료</li>
+                    </ul>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-blue-500 card-hover">
+                    <div class="text-4xl mb-4">🎖️</div>
+                    <h4 class="text-xl font-bold mb-2">Certification</h4>
+                    <p class="text-sm text-slate-600 mb-4">브랜드 인증 및 마케팅 협업</p>
+                    <ul class="text-xs text-slate-500 space-y-2">
+                        <li>• '푸드 스트럭처' 인증 마크</li>
+                        <li>• 안전한 식품 브랜드 제휴</li>
+                    </ul>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-purple-500 card-hover">
+                    <div class="text-4xl mb-4">📑</div>
+                    <h4 class="text-xl font-bold mb-2">Subscription</h4>
+                    <p class="text-sm text-slate-600 mb-4">개인 맞춤형 분석 리포트</p>
+                    <ul class="text-xs text-slate-500 space-y-2">
+                        <li>• 월간 체내 축적 물질 분석</li>
+                        <li>• 개인별 디톡스 가이드 제공</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-12 text-center">
+        <p class="font-bold text-xl mb-2 text-white">Food Structure</p>
+        <p class="text-sm opacity-70 max-w-md mx-auto mb-8">
+            식품의 구조를 읽으면 건강이 보입니다.<br>
+            글로벌 표준 데이터 기반 식품 분석 플랫폼
+        </p>
+        <div class="text-xs text-slate-500">
+            © 2024 Food Structure Project. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Utility Functions ---
+        
+        // Label Wrapping Function (16 char limit)
+        function splitLabel(str, maxLen = 16) {
+            if (str.length <= maxLen) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + ' ' + words[i]).length <= maxLen) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Common Tooltip Config for Multiline Support
+        const commonPlugins = {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                },
+                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                padding: 12,
+                cornerRadius: 8,
+            },
+            legend: {
+                labels: {
+                    font: { family: "'Noto Sans KR', sans-serif", size: 12 },
+                    usePointStyle: true,
+                    padding: 20
+                },
+                position: 'bottom'
+            }
+        };
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: commonPlugins
+        };
+
+        // --- 2. Chart Rendering ---
+
+        // Chart 1: Target Audience (Pie/Donut)
+        const ctxTarget = document.getElementById('targetChart').getContext('2d');
+        const labelsTarget = ['Core (질환 관리)', 'Active (부모)', 'Mass (다이어터)'];
+        new Chart(ctxTarget, {
+            type: 'doughnut',
+            data: {
+                labels: labelsTarget.map(l => splitLabel(l)),
+                datasets: [{
+                    data: [20, 35, 45], // Estimated percentages
+                    backgroundColor: ['#6366f1', '#0ea5e9', '#cbd5e1'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                ...commonOptions,
+                cutout: '60%',
+                plugins: {
+                    ...commonPlugins,
+                    title: {
+                        display: true,
+                        text: '사용자 타겟 구성비',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Algorithm Weights (Pie/Doughnut)
+        const ctxAlgo = document.getElementById('algorithmChart').getContext('2d');
+        const labelsAlgo = ['현대인 섭취 빈도', '체내 축적/지속성', '생리학적 독성'];
+        new Chart(ctxAlgo, {
+            type: 'pie',
+            data: {
+                labels: labelsAlgo.map(l => splitLabel(l)),
+                datasets: [{
+                    data: [40, 30, 30],
+                    backgroundColor: ['#3b82f6', '#a855f7', '#ec4899'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonPlugins,
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // Chart 3: Global Standards (Bar Chart - Grouped)
+        const ctxStandards = document.getElementById('standardsChart').getContext('2d');
+        // Hypothetical Data: Permissible daily intake (mg/kg) for 3 common additives
+        // Additive A: High in US/KR, Low in EU
+        // Additive B: Allowed in US, Restricted in KR, Banned in EU
+        const labelsStandards = ['타르색소 (Red 40)', '보존제 (Sorbate)', '산화방지제 (BHA)'];
+        new Chart(ctxStandards, {
+            type: 'bar',
+            data: {
+                labels: labelsStandards.map(l => splitLabel(l)),
+                datasets: [
+                    {
+                        label: '한국 (KR)',
+                        data: [7.0, 25.0, 0.5],
+                        backgroundColor: '#f87171',
+                        borderRadius: 4
+                    },
+                    {
+                        label: '미국 (FDA)',
+                        data: [10.0, 30.0, 1.0], // Generally looser
+                        backgroundColor: '#60a5fa',
+                        borderRadius: 4
+                    },
+                    {
+                        label: '유럽 (EFSA)',
+                        data: [4.0, 15.0, 0.2], // Generally stricter
+                        backgroundColor: '#4ade80',
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '1일 허용량 (mg/kg bw)'
+                        },
+                        grid: { color: '#e2e8f0' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    ...commonPlugins,
+                    tooltip: {
+                        ...commonPlugins.tooltip,
+                        callbacks: {
+                            ...commonPlugins.tooltip.callbacks,
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw + ' mg/kg';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 4: Radar Chart (Impact Profile)
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        const labelsRadar = ['혈당 스파이크', '장내 미생물 교란', '간 대사 부담', '호르몬 간섭', '알레르기 유발'];
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: labelsRadar.map(l => splitLabel(l)),
+                datasets: [{
+                    label: '00 소스 위험도 분석',
+                    data: [90, 85, 70, 40, 30], // High sugar/emulsifiers, low allergy
+                    fill: true,
+                    backgroundColor: 'rgba(249, 115, 22, 0.2)', // Orange transparent
+                    borderColor: 'rgb(249, 115, 22)',
+                    pointBackgroundColor: 'rgb(249, 115, 22)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(249, 115, 22)'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.2)' },
+                        pointLabels: {
+                            color: 'white',
+                            font: { size: 11, family: "'Noto Sans KR', sans-serif" }
+                        },
+                        ticks: { display: false, backdropColor: 'transparent' },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    ...commonPlugins,
+                    legend: { display: false }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
